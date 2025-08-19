@@ -103,3 +103,18 @@
   - **验证**：此刻，这个`ID Token`的来源变成了**“不可信的”浏览器**。你的后端在每次收到它时，都**必须重新进行完整的签名和声明验证**，才能再次信任它。
 
 **最终建议**：为了简单和安全，尽量使用**授权码流程**，在后通道获取`ID Token`，**一次性使用**其中的信息，然后就忘记它。这是最稳妥的实践。
+
+## Authorization Request
+
+```
+https://xxxxxxxxxxh0.com/authorize?
+response_type=code&
+client_id=xxxxxxxxaDdgIRr&
+state=my_random_test_state_0814&
+scope=openid%20profile%20email&
+redirect_uri=https://ops.mygame.com/callback&
+code_challenge=xxxxxxxxxxpLTu4&
+code_challenge_method=S256
+```
+
+https://example-app.com/base64

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5em; }
+    .card { background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5em; text-align: center; }
+    .card.disabled { background-color: #e9ecef; color: #6c757d; cursor: not-allowed; }
+    .card h3 { margin-top: 0; }
+    .card button { width: 100%; padding: 0.8em; border: none; border-radius: 5px; background-color: #28a745; color: white; font-size: 1em; cursor: pointer; }
+    .card.disabled button { background-color: #adb5bd; }
+    iframe { width: 100%; height: 60px; border: 1px solid #dee2e6; margin-top: 1em; }
+</style>
+
+<h1>运维操作面板</h1>
+<p>您的角色: <strong>{{ user.roles|join(', ') }}</strong></p>
+
+<div class="grid">
+    <div class="card {% if not permissions.can_view_details %}disabled{% endif %}">
+        <h3>游戏服详情</h3>
+        <p>查看服务器的详细运行状态和配置。</p>
+        <form action="/actions/details" method="post" target="details-frame">
+            <button type="submit" {% if not permissions.can_view_details %}disabled{% endif %}>查看详情</button>
+        </form>
+    </div>
+
+    <div class="card {% if not permissions.can_update %}disabled{% endif %}">
+        <h3>更新</h3>
+        <p>对游戏服务器进行版本更新或补丁操作。</p>
+        <form action="/actions/update" method="post" target="update-frame">
+            <button type="submit" {% if not permissions.can_update %}disabled{% endif %}>执行更新</button>
+        </form>
+    </div>
+
+    <div class="card {% if not permissions.can_merge %}disabled{% endif %}">
+        <h3>合服</h3>
+        <p>执行高风险的服务器合并操作。</p>
+        <form action="/actions/merge" method="post" target="merge-frame">
+            <button type="submit" {% if not permissions.can_merge %}disabled{% endif %}>开始合服</button>
+        </form>
+    </div>
+
+    <div class="card {% if not permissions.can_analyze %}disabled{% endif %}">
+        <h3>数据分析</h3>
+        <p>访问和分析游戏相关的运营数据。</p>
+        <form action="/actions/analysis" method="post" target="analysis-frame">
+            <button type="submit" {% if not permissions.can_analyze %}disabled{% endif %}>进入分析</button>
+        </form>
+    </div>
+</div>
+
+<!-- 用于显示操作结果的iframe -->
+<div style="margin-top: 2em;">
+    <h4>操作结果日志:</h4>
+    <style>
+        .log-frame {
+            width: 100%;
+            height: 80px; /* 增加高度 */
+            border: 1px solid #ccc;
+            margin-bottom: 1em; /* 增加间距 */
+            font-family: monospace; /* 使用等宽字体，更像日志 */
+            background-color: #fff;
+        }
+    </style>
+    <div>
+        <strong>游戏服详情:</strong>
+        <iframe name="details-frame" class="log-frame"></iframe>
+    </div>
+    <div>
+        <strong>更新:</strong>
+        <iframe name="update-frame" class="log-frame"></iframe>
+    </div>
+    <div>
+        <strong>合服:</strong>
+        <iframe name="merge-frame" class="log-frame"></iframe>
+    </div>
+    <div>
+        <strong>数据分析:</strong>
+        <iframe name="analysis-frame" class="log-frame"></iframe>
+    </div>
+</div>
+{% endblock %}
